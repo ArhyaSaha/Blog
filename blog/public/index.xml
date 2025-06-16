@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>theBLOG™</title>
+    <link>//localhost:1313/</link>
+    <description>Recent content on theBLOG™</description>
+    <generator>Hugo -- 0.147.8</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 15 Jun 2025 20:14:00 +0300</lastBuildDate>
+    <atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>docker compose up</title>
+      <link>//localhost:1313/posts/docker-compose/</link>
+      <pubDate>Sun, 15 Jun 2025 20:14:00 +0300</pubDate>
+      <guid>//localhost:1313/posts/docker-compose/</guid>
+      <description>Simple guide for Docker-Compose and Healthchecks</description>
+    </item>
+    <item>
+      <title>docker</title>
+      <link>//localhost:1313/posts/docker/</link>
+      <pubDate>Sat, 14 Jun 2025 19:14:00 +0300</pubDate>
+      <guid>//localhost:1313/posts/docker/</guid>
+      <description>A no bs introduction to basic concepts of docker</description>
+    </item>
+  </channel>
+</rss>

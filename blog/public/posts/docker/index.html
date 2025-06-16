@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>docker | theBLOG™</title>
+<meta name="keywords" content="docker, devops">
+<meta name="description" content="A no bs introduction to basic concepts of docker">
+<meta name="author" content="">
+<link rel="canonical" href="//localhost:1313/posts/docker/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.8fe10233a706bc87f2e08b3cf97b8bd4c0a80f10675a143675d59212121037c0.css" integrity="sha256-j&#43;ECM6cGvIfy4Is8&#43;XuL1MCoDxBnWhQ2ddWSEhIQN8A=" rel="preload stylesheet" as="style">
+<link rel="icon" href="//localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="//localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="//localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="//localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="//localhost:1313/posts/docker/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:url" content="//localhost:1313/posts/docker/">
+  <meta property="og:site_name" content="theBLOG™">
+  <meta property="og:title" content="docker">
+  <meta property="og:description" content="A no bs introduction to basic concepts of docker">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-14T19:14:00+03:00">
+    <meta property="article:modified_time" content="2025-06-14T19:14:00+03:00">
+    <meta property="article:tag" content="Docker">
+    <meta property="article:tag" content="Devops">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker">
+<meta name="twitter:description" content="A no bs introduction to basic concepts of docker">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "//localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "docker",
+      "item": "//localhost:1313/posts/docker/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "docker",
+  "name": "docker",
+  "description": "A no bs introduction to basic concepts of docker",
+  "keywords": [
+    "docker", "devops"
+  ],
+  "articleBody": " DOCKER 1. Virtualization vs Containerization Virtualization is basically what happens in VMs using hypervisor. Every time you want to put an OS it takes resources from the host’s computer (Like memory, storage and CPU cores) to install and run on those resources.\nWhereas Containerization is a lightweight alternative to virtualization. It allows multiple application to run isolated by using containers and sharing the same host’s OS and kernel. Containers package the application along with its dependencies, libraries and runtime.\nFeature Virtualization (VMs) Containerization OS Per Instance Full OS Shares host OS kernel Boot Time Minutes Seconds Resource Usage High (RAM, CPU, Storage) Low Isolation Level Strong (hypervisor-based) Medium (namespace-based) Portability Moderate (OS-dependent) High (containers are portable) Example Tools VirtualBox, VMware, KVM Docker, Podman, Kubernetes (for orchestration) 2. Docker Images # pull a base image which gives all required tools and librarires to run your code FROM openjdk:17-jdk-alpine # create a folder where the app code will be stored WORKDIR /app # Copy the required files to the app folder COPY src/Main.java . # compile RUN javac Main.java # run the app, CMD can be overwritten while docker run CMD [\"java\",\"Main\"] To build this file docker build -t java-app .\nbuild: to tell we want to build an image using a dockerfile -t java-app: to give a name java-app to the image .: this is the path to the dockerfile To list all images: docker images\n3. Docker Containers To run the image: docker run Running the image will spin up a container which will be running the java-app\nTo check all running container: docker ps\n4. Docker Networking Docker provides several built-in network types to allow containers to communicate with each other and with the outside world.\nTypes:\nBridge: (Default) Allows container-to-container communication on the same host via a private virtual network. Host: Shares the host’s network stack directly; container has no network isolation from the host. Overlay: Enables communication between containers on different Docker hosts in a Swarm cluster. Macvlan: Gives containers a unique MAC address, making them appear as separate physical devices on the network. Custom Bridge: User-defined bridge network with automatic DNS resolution between containers by name. None: Completely disables networking for the container; full isolation. Network Type Use Case Can Talk to Host? Can Talk to Internet? Use with Docker Swarm? Bridge Default for single-host use ✔️ (with port mapping) ✔️ ❌ Host High performance, no isolation ✔️ ✔️ ❌ None Full isolation ❌ ❌ ❌ Overlay Multi-host container communication ✔️ ✔️ ✔️ Macvlan Container as full LAN device ✔️ (like a physical device) ✔️ (depends) ❌ Create network: docker network create twotiernetwork -d bridge This creates a bridge network named twotiernetwork. (Note: -d here is for driver as bridge not detatched mode.)\nRun an image with connection to the network. docker run -d -p 5000:5000 --network twotiernetwork twotierbackend:latest\n4. Docker Volumes If a container has to be removed to restart then it will also loose its data. To prevent this we store its data in a volume.\nCreate a volume: docker volume create mysql-data\ndocker run -d --name mysql -v mysql-data:/var/lib/mysql mysql\nThis binds the mysql-data volume to where the mysql container stores its data (/var/lib/mysql this can be found through internet for other apps). Docker-Compose Docker Compose is a tool used to define and run multi-container Docker applications using a simple YAML file docker-compose.yml\nWhy? It lets you start, stop, and manage multiple containers (like app + database + cache) with a single command (docker compose up), making development and deployment easier.\nBasically, Docker Compose = One file + one command (to run multiple containers together)\nMore on Docker-Compose.\n",
+  "wordCount" : "605",
+  "inLanguage": "en",
+  "datePublished": "2025-06-14T19:14:00+03:00",
+  "dateModified": "2025-06-14T19:14:00+03:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "//localhost:1313/posts/docker/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "theBLOG™",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "//localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="//localhost:1313/" accesskey="h" title="theBLOG™ (Alt + H)">theBLOG™</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="//localhost:1313/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="//localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="//localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      docker
+    </h1>
+    <div class="post-description">
+      A no bs introduction to basic concepts of docker
+    </div>
+    <div class="post-meta"><span title='2025-06-14 19:14:00 +0300 +0300'>June 14, 2025</span>
+
+</div>
+  </header> 
+  <div class="post-content"><div align="center">
+  <img src="/dockerlogo.png" alt="Docker Logo" width='80px' height='80px'>
+</div>
+<div align="center"><h1>DOCKER</h1></div>
+<h3 id="1-virtualization-vs-containerization">1. Virtualization vs Containerization<a hidden class="anchor" aria-hidden="true" href="#1-virtualization-vs-containerization">#</a></h3>
+<p>Virtualization is basically what happens in VMs using hypervisor. Every time you want to put an OS it takes resources from the host&rsquo;s computer (Like memory, storage and CPU cores) to install and run on those resources.</p>
+<p>Whereas Containerization is a lightweight alternative to virtualization. It allows multiple application to run isolated by using containers and sharing the same host&rsquo;s OS and kernel.
+Containers package the application along with its dependencies, libraries and runtime.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Feature</th>
+          <th>Virtualization (VMs)</th>
+          <th>Containerization</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>OS Per Instance</td>
+          <td>Full OS</td>
+          <td>Shares host OS kernel</td>
+      </tr>
+      <tr>
+          <td>Boot Time</td>
+          <td>Minutes</td>
+          <td>Seconds</td>
+      </tr>
+      <tr>
+          <td>Resource Usage</td>
+          <td>High (RAM, CPU, Storage)</td>
+          <td>Low</td>
+      </tr>
+      <tr>
+          <td>Isolation Level</td>
+          <td>Strong (hypervisor-based)</td>
+          <td>Medium (namespace-based)</td>
+      </tr>
+      <tr>
+          <td>Portability</td>
+          <td>Moderate (OS-dependent)</td>
+          <td>High (containers are portable)</td>
+      </tr>
+      <tr>
+          <td>Example Tools</td>
+          <td>VirtualBox, VMware, KVM</td>
+          <td>Docker, Podman, Kubernetes (for orchestration)</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="2-docker-images">2. Docker Images<a hidden class="anchor" aria-hidden="true" href="#2-docker-images">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#75715e"># pull a base image which gives all required tools and librarires to run your code</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> openjdk:17-jdk-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># create a folder where the app code will be stored</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Copy the required files to the app folder</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> src/Main.java .<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># compile</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> javac Main.java<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># run the app, CMD can be overwritten while docker run</span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;Main&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>To build this file
+<code>docker build -t java-app .</code></p>
+<ul>
+<li><strong>build</strong>: to tell we want to build an image using a dockerfile</li>
+<li><code>-t java-app</code>: to give a name java-app to the image</li>
+<li><code>.</code>: this is the path to the dockerfile</li>
+</ul>
+<p>To list all images: <code>docker images</code></p>
+<h3 id="3-docker-containers">3. Docker Containers<a hidden class="anchor" aria-hidden="true" href="#3-docker-containers">#</a></h3>
+<p>To run the image: <code>docker run</code>
+Running the image will spin up a container which will be running the java-app</p>
+<p>To check all running container: <code>docker ps</code></p>
+<h3 id="4-docker-networking">4. Docker Networking<a hidden class="anchor" aria-hidden="true" href="#4-docker-networking">#</a></h3>
+<p>Docker provides several built-in <strong>network types</strong> to allow containers to communicate with each other and with the outside world.</p>
+<p>Types:</p>
+<ol>
+<li><strong>Bridge:</strong> (Default) Allows container-to-container communication on the same host via a private virtual network.</li>
+<li><strong>Host:</strong> Shares the host’s network stack directly; container has no network isolation from the host.</li>
+<li><strong>Overlay:</strong> Enables communication between containers on different Docker hosts in a Swarm cluster.</li>
+<li><strong>Macvlan:</strong> Gives containers a unique MAC address, making them appear as separate physical devices on the network.</li>
+<li><strong>Custom Bridge:</strong> User-defined bridge network with automatic DNS resolution between containers by name.</li>
+<li><strong>None:</strong> Completely disables networking for the container; full isolation.</li>
+</ol>
+<table>
+  <thead>
+      <tr>
+          <th>Network Type</th>
+          <th>Use Case</th>
+          <th>Can Talk to Host?</th>
+          <th>Can Talk to Internet?</th>
+          <th>Use with Docker Swarm?</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Bridge</td>
+          <td>Default for single-host use</td>
+          <td>✔️ (with port mapping)</td>
+          <td>✔️</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>Host</td>
+          <td>High performance, no isolation</td>
+          <td>✔️</td>
+          <td>✔️</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>None</td>
+          <td>Full isolation</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>Overlay</td>
+          <td>Multi-host container communication</td>
+          <td>✔️</td>
+          <td>✔️</td>
+          <td>✔️</td>
+      </tr>
+      <tr>
+          <td>Macvlan</td>
+          <td>Container as full LAN device</td>
+          <td>✔️ (like a physical device)</td>
+          <td>✔️ (depends)</td>
+          <td>❌</td>
+      </tr>
+  </tbody>
+</table>
+<p>Create network: <code>docker network create twotiernetwork -d bridge</code>
+This creates a bridge network named twotiernetwork. (Note: -d here is for driver as bridge not detatched mode.)</p>
+<p>Run an image with connection to the network.
+<code>docker run -d -p 5000:5000 --network twotiernetwork twotierbackend:latest</code></p>
+<h3 id="4-docker-volumes">4. Docker Volumes<a hidden class="anchor" aria-hidden="true" href="#4-docker-volumes">#</a></h3>
+<p>If a container has to be removed to restart then it will also loose its data.
+To prevent this we store its data in a volume.</p>
+<p>Create a volume: <code>docker volume create mysql-data</code></p>
+<p><code>docker run -d --name mysql -v mysql-data:/var/lib/mysql mysql</code></p>
+<ul>
+<li>This binds the mysql-data volume to where the mysql container stores its data (/var/lib/mysql this can be found through internet for other apps).</li>
+</ul>
+<h3 id="docker-compose">Docker-Compose<a hidden class="anchor" aria-hidden="true" href="#docker-compose">#</a></h3>
+<p>Docker Compose is a tool used to define and run multi-container Docker applications using a simple YAML file docker-compose.yml</p>
+<p>Why?
+It lets you start, stop, and manage multiple containers (like app + database + cache) with a single command (docker compose up), making development and deployment easier.</p>
+<p>Basically,
+Docker Compose = One file + one command (to run multiple containers together)</p>
+<p>More on <strong><a href="/posts/docker-compose">Docker-Compose</a></strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="//localhost:1313/tags/docker/">Docker</a></li>
+      <li><a href="//localhost:1313/tags/devops/">Devops</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2025 <a href="//localhost:1313/">theBLOG™</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

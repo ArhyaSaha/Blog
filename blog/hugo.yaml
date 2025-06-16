@@ -1,0 +1,64 @@
+baseURL: ""
+languageCode: en-us
+title: theBLOG™
+theme: ["PaperMod"]
+
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
+menu:
+  main:
+    - identifier: archives
+      name: Archives
+      url: /archives/
+      weight: 10
+    # - identifier: tags
+    #   name: Tags
+    #   url: /tags
+    #   weight: 60
+    # - identifier: notes
+    #   name: Notes
+    #   url: https://notes.arkalim.org
+    #   weight: 70
+
+params:
+  # theme
+  showToc: false
+  TocOpen: false
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  # hideMeta: false
+
+  # for enchanced SEO
+  env: production
+
+  # Home Page
+  profileMode:
+    enabled: true
+    title: "Arhya Pratim Saha"
+    subtitle: Surviving through life.
+
+    imageUrl: "/ArhyaPratimSaha(2).jpg"
+    imageWidth: 180
+    imageHeight: 180
+    # buttons:
+    #   - name: Resume
+    #     url: ""
+
+  # List View
+  # hideDescriptionInList: true
+
+  # cover image for posts
+  # cover:
+  #   hiddenInList: false # hide on list pages and home
+  #   hiddenInSingle: false # hide on single page
+
+  socialIcons:
+    - name: "email"
+      url: "mailto:arhyapratimsaha28@gmail.com"
+    - name: "linkedin"
+      url: "https://www.linkedin.com/in/arhya-saha-011705346/"
+    - name: "github"
+      url: "https://github.com/ArhyaSaha"
