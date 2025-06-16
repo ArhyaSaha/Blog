@@ -1,4 +1,4 @@
-baseURL: "https://blog-murex-beta-yn86xgirpi.vercel.app/"
+baseURL: ""
 languageCode: en-us
 title: theBLOG™
 theme: ["PaperMod"]
